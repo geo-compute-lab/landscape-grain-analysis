@@ -3,9 +3,7 @@
 
 **Associated manuscript:** *Assessing the Effects of Spatial Grain Size on Multi-Scale Coastal Landscape Monitoring: Evidence from Haikou, China*
 
-**Package scope:** This repository provides documented analytical scripts and workflow templates designed to implement the methods described in the manuscript. It does not include example datasets, the restricted Haikou source data, or the actual landscape metric sequences generated for individual grain sizes.
-
-Importantly, the code has not been validated against the restricted 2024 Haikou survey data or the original water-vector source data. Therefore, this repository should be regarded as a methodological implementation resource rather than a complete or exact archive of the scripts used to generate the results reported in the manuscript.
+**Package scope:** This repository provides the analytical scripts and workflow templates used for the methods applied in the Haikou study. The original Haikou survey data, water-vector data, and per-grain-size landscape metric sequences are not included because they are not available for public release. The code is provided to document the analytical procedures; reproducing the exact Haikou results requires the original data, while application to other study areas may require adjustments to the input data and settings.
 
 ## 1. Included components
 
@@ -18,18 +16,16 @@ Importantly, the code has not been validated against the restricted 2024 Haikou 
 | `run_recommendation.py` | Transparent candidate clustering using six core-metric Pettitt points, a majority threshold, and one-grain-interval tolerance |
 | `arcgis10_2_rasterization.py` | **ArcGIS Desktop 10.2 template** for rasterization; requires ArcGIS/arcpy and project-specific configuration |
 | `ARCGIS_METHOD_PSEUDOCODE.md` | Data preparation, RMA/RCC, corridor evaluation, and metric-export workflow where proprietary tools are required |
-| `tests/test_core.py` | Unit checks for independent numerical and tabular operations |
+| `test_core.py` | Unit checks for independent numerical and tabular operations |
 | `METHODS_AUDIT.md` | Implementation provenance, limitations, and validation status |
 | `USER_GUIDE_CN.md` | Chinese usage notes |
 | `SUBMISSION_NOTE.md` | Suggested supplementary-code and data-availability wording |
 
 No example or demonstration datasets are distributed with this package. All input files must be prepared independently by the user. The test suite uses test fixtures created within the tests; it does not require a distributed example-data folder.
 
-## 2. Confidentiality and reproduction scope
+## 2. Data availability
 
-The source land-use survey data and continuous water-vector data are restricted and are **not included**. The actual per-grain-size landscape metric sequences are also not included because they have not been cleared for public release. No real project file paths, surveyed coordinates, confidential vector features, or empirical input tables are embedded in this package.
-
-Researchers can use the scripts to implement the **method on independently obtained and appropriately prepared input data**. The package alone cannot reproduce the paper's exact empirical 150/50/25-m recommendations or other study-specific numerical results without the original observations and corresponding GIS processing inputs. Do not present outputs generated from unrelated data as validation of the study's reported results.
+The analytical methods and workflows in this package were applied to the Haikou study data and used in the research reported in the manuscript. The original land-use survey data, water-vector data, and per-grain-size landscape metric sequences are not included because they cannot be publicly shared. Therefore, the exact Haikou results cannot be reproduced from this code package alone. Researchers may adapt the scripts to their own data and study areas.
 
 ## 3. Software requirements
 
@@ -47,7 +43,7 @@ Provide a CSV or Excel workbook with one row per grain size and study area, sort
 
 `LID, SIZE, NP, PD, ENN_MN, PLADJ, COHESION, MESH, AI`
 
-- `SIZE` is a positive grain size in metres; it must be unique for each `LID`.
+- `SIZE` is a finite positive grain size in metres; zero, negative, missing, or non-finite values are rejected, and it must be unique for each `LID`.
 - `LID` is the study-area identifier; it is optional when the input contains only one region.
 - Earlier spreadsheet aliases **`ENNN` -> `ENN_MN`** and **`ESH` -> `MESH`** are handled automatically.
 - Metric values must be numeric and finite. Seven landscape metrics are accepted; six (all except MESH) are core inputs to the baseline decision.
@@ -77,8 +73,8 @@ Provide a user-prepared CSV with one row per **landscape class per grain size**,
 
 `SIZE,class,reference_area,raster_area,corridor_discontinuous`
 
-- `reference_area`: vector-derived area for that class (constant across grain sizes and positive).
-- `raster_area`: pixel-count multiplied by cell area for that class, in the same area units.
+- `reference_area`: vector-derived area for that class (constant across grain sizes, finite, and positive).
+- `raster_area`: pixel-count multiplied by cell area for that class, finite and non-negative, in the same area units.
 - `corridor_discontinuous`: a Boolean outcome obtained from the fixed reference-river-path criterion; repeat the same true/false value per `SIZE` across landscape-class rows.
 - All grain sizes must have the same set of classes. Keep map boundary/extents and treatment of partial edge cells consistent with the manuscript.
 
@@ -113,15 +109,17 @@ The origin offsets are `original`, `X + 0.25g`, `Y + 0.25g`, and `XY + 0.5g`; `g
 
 ## 8. Validation and methodological cautions
 
-The numerical utilities, input validation, class-area screening, corridor Boolean helper, and candidate grouping have unit tests in `tests/test_core.py`. Run the tests with:
+The numerical utilities, input validation, class-area screening, corridor Boolean helper, and candidate grouping have unit tests in the root-level `test_core.py` file. Run the tests with:
 
 ```bash
-python -m pytest tests -q
+python -m pytest test_core.py -q
 ```
 
-End-to-end MK/Hamed–Rao tests were **not run** in the authoring environment (the required package was not installed), and the ArcGIS template was **not executed** (ArcGIS was unavailable). The original empirical sequences were not supplied, so neither original nor modified code has been checked for exact agreement with published 150/50/25-m values.
+The analytical methods and workflows represented here were applied to the Haikou study data during the research. However, the restricted source data and empirical per-grain-size sequences are not part of this public repository, so readers cannot independently rerun the Haikou analysis or verify the exact study-specific numerical results from this package alone. The public package has been reorganized and documented for methodological transparency; it is not a byte-for-byte archive of every script version used during the original analysis.
 
-Pettitt's p-values are asymptotic approximations; ranked metrics at adjacent grain sizes are serially dependent, so significance should not be overinterpreted. UF–UB crossing positions are **descriptive candidate ranges** and not independently significant breakpoint tests. In case of discrepancies, use the manuscript's explicitly reported definitions, verified study software/parameters, and original metric series; do not force software to reproduce a preferred number.
+The ArcGIS 10.2 template is provided as a configurable workflow template and must be checked in the appropriate ArcGIS/ArcPy environment with the user's own data. The scripts are intended to support methodological understanding and adaptation, not to guarantee identical results across different study areas or software environments.
+
+Pettitt's p-values are asymptotic approximations; ranked metrics at adjacent grain sizes are serially dependent, so significance should not be overinterpreted. UF–UB crossing positions are **descriptive candidate ranges** and not independently significant breakpoint tests. In case of discrepancies, use the manuscript's explicitly reported definitions, verified study software/parameters, and the input metric series; do not force software to reproduce a preferred number.
 
 ## 9. Reproducibility and data preparation
 

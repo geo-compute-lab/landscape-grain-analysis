@@ -1,7 +1,7 @@
 """Run MK + Hamed--Rao + sequential UF/UB + Pettitt on CSV/Excel metric sequences.
 
 Example (synthetic data):
-    python run_statistics.py path/to/your_metrics.csv --output-dir path/to/output
+    python run_statistics.py example_data/synthetic_metrics.csv --output-dir example_output
 """
 from __future__ import annotations
 import argparse
