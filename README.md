@@ -3,7 +3,9 @@
 
 **Associated manuscript:** *Assessing the Effects of Spatial Grain Size on Multi-Scale Coastal Landscape Monitoring: Evidence from Haikou, China*
 
-**Package scope:** This repository provides documented analytical scripts and workflow templates for implementing the methods described in the manuscript. It does not include example datasets, the restricted Haikou source data, or the actual per-grain-size landscape metric sequences. The code has not been validated against the restricted 2024 Haikou survey or water-vector source data and must not be described as an exact archive of the originally executed scripts.
+**Package scope:** This repository provides documented analytical scripts and workflow templates designed to implement the methods described in the manuscript. It does not include example datasets, the restricted Haikou source data, or the actual landscape metric sequences generated for individual grain sizes.
+
+Importantly, the code has not been validated against the restricted 2024 Haikou survey data or the original water-vector source data. Therefore, this repository should be regarded as a methodological implementation resource rather than a complete or exact archive of the scripts used to generate the results reported in the manuscript.
 
 ## 1. Included components
 
